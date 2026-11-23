@@ -82,4 +82,6 @@ td.name span { color: var(--muted); font-size: 12px; }
 .steps li b { color: var(--accent); }
 .empty { padding: 32px; text-align: center; color: var(--muted); }
 .note { color: var(--muted); font-size: 13px; margin-top: 16px; }
+.more { margin-top: 12px; min-height: 36px; padding: 0 16px; border: 1px solid var(--accent); border-radius: 8px; background: transparent; color: var(--accent); font-weight: 600; }
+.more:hover { background: rgba(45,212,191,.12); }
 @media (max-width: 860px) { .lede, .detail-grid { grid-template-columns: 1fr; } .facts { border-left: 0; padding-left: 0; } }

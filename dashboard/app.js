@@ -8,7 +8,7 @@
   var DATA = window.RADAR;
   if (!DATA) return;
   var app = document.getElementById('board');
-  var state = { q: '', category: 'all', chain: 'all', tab: 'pre-token', sort: 'implied', dir: -1, selected: null };
+  var state = { q: '', category: 'all', chain: 'all', tab: 'pre-token', sort: 'implied', dir: -1, selected: null, showAll: false };
 
   var usd = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
   function fmtUsd(n) {
@@ -273,7 +273,7 @@
     if (rows.length === 0) {
       tbody.appendChild(el('tr', null, el('td', { colspan: 8, class: 'empty', text: 'No protocols match this filter.' })));
     }
-    rows.slice(0, 100).forEach(function (r) {
+    rows.slice(0, state.showAll ? rows.length : 100).forEach(function (r) {
       var tr = el('tr', { class: state.selected === r.slug ? 'selected' : '', onclick: function () { state.selected = r.slug; render(); } },
         el('td', { class: 'num', text: String(r.rank) }),
         el('td', { class: 'name' }, el('b', { text: r.name }), el('span', { text: r.slug })),
@@ -288,8 +288,13 @@
     table.appendChild(tbody);
     panel.firstChild.appendChild(table);
     shell.appendChild(panel);
-    var count = el('p', { class: 'note', text: rows.length + ' protocols match · showing first 100 · click a row for its detail view and farm plan' });
+    var shown = state.showAll ? rows.length : Math.min(100, rows.length);
+    var count = el('p', { class: 'note', text: rows.length + ' protocols match · showing ' + shown + ' · click a row for its detail view and farm plan' });
     shell.appendChild(count);
+    if (rows.length > 100) {
+      var more = el('button', { class: 'more', text: state.showAll ? 'Show first 100' : 'Show all ' + rows.length + ' rows', onclick: function () { state.showAll = !state.showAll; render(); } });
+      shell.appendChild(more);
+    }
 
     var selected = state.selected ? DATA.rows.find(function (r) { return r.slug === state.selected; }) : null;
     if (selected) {
